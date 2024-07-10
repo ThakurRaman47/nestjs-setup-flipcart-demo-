@@ -37,9 +37,17 @@ export class UserService {
   }
 
   async signUpUser(payload: createUser) {
-    let hash = bcrypt.hash(payload.password,this.salt)
-    payload['password'] = hash;
-    return await this.usersRepository.signUpUser(payload)
+    try {
+      let hash = await bcrypt.hash(payload.password,parseInt(this.salt))
+      payload['password'] = hash;
+      const createUser =  await this.usersRepository.signUpUser(payload)
+      let token = await this.jwtService.signAsync(createUser)
+      return {...createUser, token}
+    }
+    catch(err) {
+      throw err
+    }
+    
   }
 
   async verifyUser(payload:any) {
@@ -50,9 +58,19 @@ export class UserService {
     let getUser = await this.usersRepository.checkUserByEmail(email)
     if(getUser) {
       let originalPassword = bcrypt.compare(password, getUser.password)
-      let findUser = await this.usersRepository
+      if(originalPassword) {
+        let obj = {} 
+        Object.assign(obj,getUser)
+        let token = await this.jwtService.signAsync(obj)
+        return { ...getUser, token }
+      }
+      return
     }
     return
+  }
+
+  async getUserById(id:string) {
+    return await this.usersRepository.getUserById(id)
   }
   
 }

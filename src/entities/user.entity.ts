@@ -31,10 +31,10 @@ export class User {
     @Column( {type : 'date', nullable: false})
     dob : Date
 
-    @Column()
+    @Column({nullable: true})
     profilePic: string
 
-    @Column({ type : 'double precision'})
+    @Column({ type : 'double precision', nullable: true})
     lastLogin: number
 
     @CreateDateColumn()

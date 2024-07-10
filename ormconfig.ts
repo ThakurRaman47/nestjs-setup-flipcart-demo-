@@ -24,7 +24,7 @@ export const dataSourceOptions: DataSourceOptions = {
   entities: ['dist/**/*.entity{.ts,.js}'],
   synchronize: false,
   migrationsTableName: "migrations",
-  migrations: ["dist/migrations/*.js"],
+  migrations: ["dist/src/migrations/*.js"],
 //   cli: {
 //  migrationsDir: "migrations"
 //   }
