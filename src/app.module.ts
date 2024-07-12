@@ -5,11 +5,15 @@ import { UserModule } from './user/user.module';
 import { ProductsModule } from './products/products.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [ 
+    ThrottlerModule.forRoot([{
+      ttl: 60, 
+      limit: 10
+    }]),
     ConfigModule.forRoot({ isGlobal: true}),
     TypeOrmModule.forRoot({
       type: 'postgres',

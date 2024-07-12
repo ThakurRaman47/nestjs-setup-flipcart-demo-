@@ -16,6 +16,7 @@ async function bootstrap() {
   .addBearerAuth()
   .build();
   const document = SwaggerModule.createDocument(app, config);
+  app.useGlobalFilters();
   SwaggerModule.setup('api', app, document);
 
   //pipes to validate HTTP payload

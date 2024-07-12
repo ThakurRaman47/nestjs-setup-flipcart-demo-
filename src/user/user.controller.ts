@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { UserLogin } from 'src/common/dto/user/user.login.dto';
 import { deleteFile, fileExists, FileUploadInterceptor } from 'src/common/helpers/upload';
 import { join } from 'path';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 const response = require('../common/helpers/response')
 
 
@@ -15,6 +16,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/signUp')
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   async userSignUp(@Body() body: CreateUserDto, @Req() req:Request, @Res() res:Response) {
     try {
       const { email } = body;
@@ -36,7 +38,8 @@ export class UserController {
 
   }
 
-  @Post('/login')
+  @Get('/login')
+  @Throttle({ default: { limit: 3, ttl: 60 } })
   @ApiQuery({name : 'email',type: 'string',required: true})
   @ApiQuery({name : 'password',type: 'string',required: true})
   async login(@Query() query: UserLogin , @Req() req:Request, @Res() res:Response) {
@@ -58,6 +61,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Get('/get-user-details')
   async getUserDetails(@Req() req, @Res() res:Response) {
     try {
@@ -77,6 +81,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @UseInterceptors(FileUploadInterceptor)
+  @Throttle({ default: { limit: 3, ttl: 60 } })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -116,16 +121,18 @@ export class UserController {
     try {
       const userData = await this.userService.getUserById(req?.user?.id)
       if(userData) {
-        const fullFileName = join(__dirname, '../../../uploads',userData.profilePic)
-        if( fileExists(fullFileName) ) {
-          deleteFile(fullFileName)
-        }
-        const deleteProfilePic = await this.userService.updateUserWithCondition({ id:req.user.id },{ profilePic :null})
-        if(!deleteProfilePic) {
-          return response.errorResponse(res,'failed to remove profile picture',HttpStatus.CONFLICT)
-        }
+        if(userData.profilePic) {
+          const fullFileName = join(__dirname, '../../../uploads',userData.profilePic)
+          if( fileExists(fullFileName) ) {
+            deleteFile(fullFileName)
+          }
+          console.log( "=========================>>>>>")
+          const deleteProfilePic = await this.userService.updateUserWithCondition({ id:req.user.id },{ profilePic :null})
+          if(!deleteProfilePic) {
+            return response.errorResponse(res,'failed to remove profile picture',HttpStatus.CONFLICT)
+          }
+        } 
         return response.successResponse(res,'Profile picture removed successfully',HttpStatus.OK)
-
       }
       else {
         return response.internalServerError(res,'User not found!',HttpStatus.NOT_FOUND)
