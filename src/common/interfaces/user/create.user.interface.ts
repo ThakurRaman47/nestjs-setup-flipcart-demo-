@@ -9,5 +9,6 @@ export interface createUser {
     address:Address[]
     country : string
     gender : string
-    dob : Date
+    dob : Date,
+    profilePic?:string
 }

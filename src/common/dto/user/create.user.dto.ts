@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Address } from "../interfaces/address.interface";
+import { Address } from "../../interfaces/user/address.interface";
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateUserDto {

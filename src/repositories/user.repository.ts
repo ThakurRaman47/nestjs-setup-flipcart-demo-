@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { createUser } from "src/common/interfaces/createUser.interface";
+import { createUser } from "src/common/interfaces/user/create.user.interface";
+import { updateUser } from "src/common/interfaces/user/update.user.interface";
 import { User } from "src/entities/user.entity";
 import { DataSource, EntityRepository, Repository } from "typeorm";
 
@@ -19,5 +20,9 @@ export class UserRepository extends Repository<User> {
 
     async signUpUser(payload: createUser) {
         return await this.save(payload)
+    }
+
+    async updateUserWithCondition(condition:any,payload:any) {
+        return await this.update(condition,payload)
     }
 }

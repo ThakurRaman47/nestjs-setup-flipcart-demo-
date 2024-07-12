@@ -1,4 +1,4 @@
-import { Address } from "src/common/interfaces/address.interface";
+import { Address } from "src/common/interfaces/user/address.interface";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 

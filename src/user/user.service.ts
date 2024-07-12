@@ -5,8 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from 'src/repositories/user.repository';
-import { createUser } from 'src/common/interfaces/createUser.interface';
+import { createUser } from 'src/common/interfaces/user/create.user.interface';
 import * as bcrypt from 'bcrypt';
+import { updateUser } from 'src/common/interfaces/user/update.user.interface';
 
 @Injectable()
 export class UserService {
@@ -71,6 +72,10 @@ export class UserService {
 
   async getUserById(id:string) {
     return await this.usersRepository.getUserById(id)
+  }
+
+  async updateUserWithCondition(condition:any,payload:updateUser) {
+    return await this.usersRepository.updateUserWithCondition(condition,payload)
   }
   
 }
