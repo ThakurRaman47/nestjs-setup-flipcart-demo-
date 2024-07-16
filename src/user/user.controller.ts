@@ -1,12 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, HttpCode, HttpStatus, UseGuards, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../common/dto/user/create.user.dto';
-import {  ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {  ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { UserLogin } from 'src/common/dto/user/user.login.dto';
 import { deleteFile, fileExists, FileUploadInterceptor } from 'src/common/helpers/upload';
 import { join } from 'path';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { User } from 'src/entities/user.entity';
 const response = require('../common/helpers/response')
 
 
@@ -16,6 +17,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/signUp')
+  @ApiResponse({status: 201,description : "user created successfully"})
   @Throttle({ default: { limit: 3, ttl: 60000 } })
   async userSignUp(@Body() body: CreateUserDto, @Req() req:Request, @Res() res:Response) {
     try {
@@ -45,7 +47,7 @@ export class UserController {
   async login(@Query() query: UserLogin , @Req() req:Request, @Res() res:Response) {
     try {
       const { email, password } = query;
-      const findUser = await this.userService.login(email, password)
+      const findUser:User = await this.userService.login(email, password)
       if(!findUser) {
         return response.errorResponse(res,'User not found',HttpStatus.NOT_FOUND)
       } 
@@ -66,7 +68,7 @@ export class UserController {
   async getUserDetails(@Req() req, @Res() res:Response) {
     try {
       const { id } = req.user;
-      const findUser = await this.userService.getUserById(id)
+      const findUser:User = await this.userService.getUserById(id)
       if(!findUser) {
         return response.errorResponse(res,'User not found',HttpStatus.NOT_FOUND)
       }
@@ -119,7 +121,7 @@ export class UserController {
   @Post('remove-profile-picture')
   async removeProfilePicture(@Req() req:any, @Res() res:Response) {
     try {
-      const userData = await this.userService.getUserById(req?.user?.id)
+      const userData:User = await this.userService.getUserById(req?.user?.id)
       if(userData) {
         if(userData.profilePic) {
           const fullFileName = join(__dirname, '../../../uploads',userData.profilePic)

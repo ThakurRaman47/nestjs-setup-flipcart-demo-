@@ -56,13 +56,13 @@ export class UserService {
   }
 
   async login(email: string, password: string) {
-    let getUser = await this.usersRepository.checkUserByEmail(email)
+    let getUser:User = await this.usersRepository.checkUserByEmail(email)
     if(getUser) {
-      let originalPassword = bcrypt.compare(password, getUser.password)
+      let originalPassword:boolean = bcrypt.compare(password, getUser.password)
       if(originalPassword) {
         let obj = {} 
         Object.assign(obj,getUser)
-        let token = await this.jwtService.signAsync(obj)
+        let token:string = await this.jwtService.signAsync(obj)
         return { ...getUser, token }
       }
       return
