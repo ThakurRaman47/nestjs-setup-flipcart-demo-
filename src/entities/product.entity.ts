@@ -15,10 +15,10 @@ export class Products {
     @Column({type :'text', nullable: true})
     description: string
 
-    @Column({ type: 'double', nullable: false})
+    @Column({ type: 'double precision', nullable: false})
     price: number
 
-    @Column({ type : 'double', nullable: false})
+    @Column({ type : 'double precision', nullable: false})
     weight:number
 
     @Column({ type : 'varchar', nullable :true})
@@ -36,15 +36,15 @@ export class Products {
     @Column({ type: 'varchar', nullable : false})
     manufacturer: string
 
-    @Column({type: 'double', nullable: false})
+    @Column({type: 'double precision', nullable: false})
     avgRatings: number
 
     @Column({default : new Date(), type : 'date'})
     releasedAt: Date
 
-    @ManyToOne(()=>Categories,(categories)=>categories.id)
-    @JoinColumn({name:'categoryId'})
-    categoryId:Categories
+    // @ManyToOne(()=>Categories,(categories)=>categories.id)
+    // @JoinColumn({name:'categoryId'})
+    // categoryId:Categories
 
     @CreateDateColumn()
     createdAt: Date

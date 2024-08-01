@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { ProductsModule } from '../src/user/products/products.module';
+import { UserModule } from './features/user/user.module';
+import { ProductsModule } from './features/products/products.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ThrottlerModule } from '@nestjs/throttler';
+import {  CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [ 
@@ -27,8 +28,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
       autoLoadEntities: true
       // synchronize: true,
     }),
-    // TypeOrmModule.forFeature([User]),
-    UserModule, ProductsModule, AuthModule
+    CacheModule.register(),
+    UserModule, 
+    ProductsModule, 
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -34,8 +34,8 @@ export class User {
     @Column({nullable: true})
     profilePic: string
 
-    @Column({ type : 'double precision', nullable: true})
-    lastLogin: number
+    // @Column({ type : 'double precision', nullable: true})
+    // lastLogin: number
 
     @CreateDateColumn()
     createdAt: Date

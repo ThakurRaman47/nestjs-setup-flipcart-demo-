@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, HttpCode, HttpStatus, UseGuards, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from '../common/dto/user/create.user.dto';
 import {  ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { UserLogin } from 'src/common/dto/user/user.login.dto';
@@ -8,7 +7,8 @@ import { deleteFile, fileExists, FileUploadInterceptor } from 'src/common/helper
 import { join } from 'path';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { User } from 'src/entities/user.entity';
-const response = require('../common/helpers/response')
+import { CreateUserDto } from 'src/common/dto/user/create.user.dto';
+const response = require('../../common/helpers/response')
 
 
 @ApiTags('User')
