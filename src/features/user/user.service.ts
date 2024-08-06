@@ -66,17 +66,15 @@ export class UserService {
         let obj = {} 
         Object.assign(obj,getUser)
         let token:string = await this.jwtService.signAsync(obj)
-        await this.cacheManager.set(`user_${getUser.id}`, getUser, 5000000);
+        await this.cacheManager.set(`user_${getUser.id}`, getUser, 5000000000);
         return { ...getUser, token }
       }
     }
     return
   }
 
-  async getUserById(id:string): Promise<User> {
-    // return await this.usersRepository.getUserById(id)
-    let value:User = await this.cacheManager.get(`user_${id}`)
-    console.log(value, `user_${id}`,"=-------==============>>>>>>")
+  async getUserById(id:string): Promise<User> { 
+    let value:User = await this.cacheManager.get(`user_${id}`) ??  await this.usersRepository.getUserById(id)
     return value 
   }
 

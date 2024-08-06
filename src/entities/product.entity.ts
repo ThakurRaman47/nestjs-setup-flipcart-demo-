@@ -42,9 +42,9 @@ export class Products {
     @Column({default : new Date(), type : 'date'})
     releasedAt: Date
 
-    // @ManyToOne(()=>Categories,(categories)=>categories.id)
-    // @JoinColumn({name:'categoryId'})
-    // categoryId:Categories
+    @ManyToOne(()=>Categories,(categories)=>categories.id)
+    @JoinColumn({name:'categoryId'})
+    categoryId:Categories
 
     @CreateDateColumn()
     createdAt: Date
